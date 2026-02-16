@@ -5,8 +5,8 @@ from pydantic import BaseModel
 
 app = FastAPI(title="Heart Disease Prediction API")
     
-model = joblib.load("../notebooks/heart_disease_model.pkl")
-features = joblib.load("../notebooks/model_features.pkl")
+model = joblib.load("notebooks/heart_disease_model.pkl")
+features = joblib.load("notebooks/model_features.pkl")
 
 class PatientData(BaseModel):
     age: int
