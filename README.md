@@ -54,7 +54,7 @@ Why these numbers matter:
 
     Stability Check: 5-fold Cross-Validation yielded an average accuracy of 82.5%, proving the model is stable.
 
-🛠 Tech Stack
+Tech Stack
 
     Python 3.12
 
