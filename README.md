@@ -1,58 +1,92 @@
-# Heart Disease Prediction Project
+Heart Disease Prediction Project
 
-This is an End-to-End Machine Learning project. I built a model to predict heart disease risk, created an API with **FastAPI**, and deployed it using **Docker** on **Render**.
+This is an End-to-End Machine Learning project. I built a model to predict heart disease risk, created an API with FastAPI, and deployed it using Docker on Render.
 
-**Live API Link:** [https://heart-disease-project-2-o3au.onrender.com/docs](https://heart-disease-project-2-o3au.onrender.com/docs)
+Live API Link: https://heart-disease-project-2-o3au.onrender.com/docs
+Project Structure
 
-## How I built this project
+The project is organized following professional software engineering practices:
 
-### 1. Data Exploration & Cleaning
-* **No Encoding/Imputation:** The dataset was already numeric, so I didn't need to convert text to numbers. There were also no missing values, so no imputation was required.
-* **Handling Outliers:** I identified outliers in `trestbps` and `chol` using the IQR method. I used **RobustScaler** to make the model more stable against these outliers.
-* **Visuals:** I used `Seaborn` and `Matplotlib` to analyze data distributions and correlations.
+    app/: Contains the FastAPI application (main.py).
 
-### 2. Model Selection
+    models/: Contains the trained Scikit-learn pipeline and feature list (.pkl files).
+
+    data/: Contains raw and processed datasets.
+
+    notebooks/: Jupyter notebooks for EDA and Model Training.
+
+How I built this project
+1. Data Exploration & Cleaning
+
+    No Encoding/Imputation: The dataset was already numeric and had no missing values.
+
+    Handling Outliers: Identified outliers in trestbps and chol using the IQR method. Used RobustScaler to make the model stable against these outliers.
+
+    Visuals: Analyzed data distributions and correlations using Seaborn and Matplotlib.
+
+2. Model Selection
+
 I tested three different models to find the best predictor:
-* **Logistic Regression:** Used as the baseline model.
-* **Random Forest (Final Choice):** This model provided the best balance between accuracy and reliability.
-* **XGBoost:** I tested XGBoost, but it was not selected because it tends to **overfit** on small datasets (this project has 302 rows) and performed slightly worse than Random Forest.
 
-### 3. Engineering the Pipeline
-* **Feature Selection:** I removed features like `fbs` and `restecg` because they had low impact on the results. This made the model simpler and more efficient.
-* **Pipelines:** I integrated scaling and modeling into a single **Scikit-learn Pipeline**. This ensures consistent preprocessing and prevents **data leakage**.
+    Logistic Regression: Used as the baseline model.
 
-## Model Results & Evaluation
+    Random Forest (Final Choice): Provided the best balance between accuracy and reliability.
 
-In medical projects, **Recall** is critical because we must minimize missing actual cases of disease.
+    XGBoost: Tested but not selected because it tends to overfit on small datasets (302 rows) and performed slightly worse than Random Forest.
 
-### Classification Report
-| Class | Precision | Recall | F1-Score |
-|-------|-----------|--------|----------|
-| **Healthy** | 0.89 | 0.78 | 0.83 |
-| **Disease** | 0.79 | **0.90** | 0.84 |
-| **Overall Accuracy** | | | **0.84** |
+3. Engineering the Pipeline
 
-### Why these numbers matter:
-* **High Recall (0.90):** The model correctly identifies **90% of people with heart disease**. This reduces the risk of telling a sick person they are healthy (False Negatives).
-* **Confidence:** When the model predicts someone is healthy, it is correct **89% of the time** (Precision for Class 0).
-* **Confusion Matrix:** The model only missed 3 cases of disease in the test set.
+    Feature Selection: Removed features like fbs and restecg due to low impact.
 
-### 4. Stability Check (Cross-Validation)
-I performed 5-fold Cross-Validation to ensure the model's performance is consistent across different data samples:
-* **CV Scores:** `[0.84, 0.80, 0.90, 0.80, 0.78]`
-* **Average CV Accuracy:** **0.8245 (82.5%)**
-This proves the model is stable and not just performing well by chance on the test set.
+    Pipelines: Integrated scaling and modeling into a single Scikit-learn Pipeline for consistent preprocessing and to prevent data leakage.
 
-## 🛠 Tech Stack
-* **Python 3.12**
-* **FastAPI** (Web Framework)
-* **Docker** (Containerization)
-* **Scikit-learn** (Machine Learning)
-* **Render** (Cloud Hosting)
+Model Results & Evaluation
 
-## How to run it locally
+In medical projects, Recall is critical to minimize missing actual cases (False Negatives).
+Classification Report
+Class	   Precision	Recall	F1-Score
+Healthy	0.89	      0.78	   0.83
+Disease	0.79	      0.90	   0.84
+Overall Accuracy			0.84
+Why these numbers matter:
 
-1. **Clone the project:**
-   ```bash
-   git clone [https://github.com/Alihmidov/heart_disease_project.git](https://github.com/Alihmidov/heart_disease_project.git)
-   cd heart_disease_project
+    High Recall (0.90): The model correctly identifies 90% of people with heart disease.
+
+    Stability Check: 5-fold Cross-Validation yielded an average accuracy of 82.5%, proving the model is stable.
+
+🛠 Tech Stack
+
+    Python 3.12
+
+    FastAPI (Web Framework)
+
+    Docker (Containerization)
+
+    Scikit-learn (Machine Learning)
+
+    Render (Cloud Hosting)
+
+How to run it locally
+
+    Clone the project:
+    Bash
+
+    git clone https://github.com/Alihmidov/heart_disease_project.git
+    cd heart_disease_project
+
+    Run with Docker (Recommended):
+    Bash
+
+    docker build -t heart-disease-api .
+    docker run -p 10000:10000 heart-disease-api
+
+    Run with Python (Manual):
+    Bash
+
+    python -m venv venv
+    source venv/Scripts/activate  # On Linux use: source venv/bin/activate
+    pip install -r requirements.txt
+    uvicorn app.main:app --host 0.0.0.0 --port 10000
+
+    Access API Documentation:
+    Open http://localhost:10000/docs in your browser to test predictions.
